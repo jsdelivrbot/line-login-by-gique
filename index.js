@@ -24,7 +24,7 @@ app.listen(process.env.PORT || 5000, () => {
     console.log(`server is listening to ${process.env.PORT || 5000}...`);
 });
  
-app.use("/", login.auth());
+app.use("/login", login.auth());
  
 // Specify the path you want to wait for the callback from LINE authorization endpoint.
 app.use("/callback", login.callback(
