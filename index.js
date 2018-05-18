@@ -31,6 +31,7 @@ app.use("/callback", login.callback(
     (req, res, next, token_response) => {
         // Success callback
         res.json(token_response);
+        console.log(res.json(token_response));
     },
     (req, res, next, error) => {
         // Failure callback
