@@ -29,12 +29,10 @@ app.use("/login", login.auth());
 // Specify the path you want to wait for the callback from LINE authorization endpoint.
 app.use("/callback", login.callback(
     (req, res, next, token_response) => {
-        // Success callback
-        res.json(token_response);
-        //res.render('pages/index');
+        //res.json(token_response);
+        res.render('pages/index');
     },
     (req, res, next, error) => {
-        // Failure callback
         res.status(400).json(error);
     }
 ));
