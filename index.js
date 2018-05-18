@@ -1,32 +1,19 @@
-/*
-const express = require('express')
-const path = require('path')
-const PORT = process.env.PORT || 5000
-
-express()
-  .use(express.static(path.join(__dirname, 'public')))
-  .set('views', path.join(__dirname, 'views'))
-  .set('view engine', 'ejs')
-  .get('/', (req, res) => res.render('pages/index'))
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
-*/
-
 "use strict";
  
 const app = require('express')();
 const line_login = require("line-login");
 const session = require("express-session");
 const session_options = {
-    secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
+    secret: "ca9a8fdaa2e65203b3685c37277ac5c8",
     resave: false,
     saveUninitialized: false
 }
 app.use(session(session_options));
- 
+
 const login = new line_login({
-    channel_id: process.env.LINE_LOGIN_CHANNEL_ID,
-    channel_secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
-    callback_url: process.env.LINE_LOGIN_CALLBACK_URL,
+    channel_id: "1581612706",
+    channel_secret: "ca9a8fdaa2e65203b3685c37277ac5c8",
+    callback_url: "https://line-login-by-gique.herokuapp.com/callback",
     scope: "openid profile",
     prompt: "consent",
     bot_prompt: "normal"
@@ -50,3 +37,18 @@ app.use("/callback", login.callback(
         res.status(400).json(error);
     }
 ));
+
+
+/*
+const express = require('express')
+const path = require('path')
+const PORT = process.env.PORT || 5000
+
+express()
+  .use(express.static(path.join(__dirname, 'public')))
+  .set('views', path.join(__dirname, 'views'))
+  .set('view engine', 'ejs')
+  .get('/', (req, res) => res.render('pages/index'))
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+*/
+
