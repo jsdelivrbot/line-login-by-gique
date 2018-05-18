@@ -14,7 +14,7 @@ const login = new line_login({
     channel_id: "1581612706",
     channel_secret: "ca9a8fdaa2e65203b3685c37277ac5c8",
     callback_url: "https://line-login-by-gique.herokuapp.com/callback",
-    scope: "openid profile",
+    //scope: "openid profile",
     prompt: "consent",
     bot_prompt: "normal"
 });
