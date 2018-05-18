@@ -30,9 +30,7 @@ app.use("/login", login.auth());
 app.use("/callback", login.callback(
     (req, res, next, token_response) => {
         // Success callback
-        console.log("Success");
-        res.send('GET request to the homepage')
-        //res.json(token_response);
+        res.json(token_response);
     },
     (req, res, next, error) => {
         // Failure callback
