@@ -23,15 +23,15 @@ app.listen(process.env.PORT || 5000, () => {
     console.log(`server is listening to ${process.env.PORT || 5000}...`);
 });
  
-// Specify the path you want to start authorization.
 app.use("/", login.auth());
  
 // Specify the path you want to wait for the callback from LINE authorization endpoint.
 app.use("/callback", login.callback(
     (req, res, next, token_response) => {
         // Success callback
-        res.json(token_response);
-        console.log(res.json(token_response));
+        console.log("Success");
+        res.send('GET request to the homepage')
+        //res.json(token_response);
     },
     (req, res, next, error) => {
         // Failure callback
