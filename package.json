@@ -14,7 +14,8 @@
     "ejs": "^2.5.6",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
-    "line-login": "^1.0.11"
+    "line-login": "^1.0.11",
+    "pug": "^2.0.3"
   },
   "devDependencies": {
     "request": "^2.81.0",

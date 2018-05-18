@@ -1,5 +1,6 @@
 "use strict";
 
+const path = require('path');
 const dotenv = require('dotenv').config();
 const app = require('express')();
 const line_login = require("line-login");
@@ -9,6 +10,7 @@ const session_options = {
     resave: false,
     saveUninitialized: false
 }
+app.set('view engine', 'pug')
 app.use(session(session_options));
 
 const login = new line_login({
@@ -29,8 +31,11 @@ app.use("/login", login.auth());
 // Specify the path you want to wait for the callback from LINE authorization endpoint.
 app.use("/callback", login.callback(
     (req, res, next, token_response) => {
+
+        //res.json(token_response.access_token);
+        res.render('index', { title: 'Hey', message: 'Hello there!' })
         //res.json(token_response);
-        res.render('pages/index');
+        //res.render('pages/index');
     },
     (req, res, next, error) => {
         res.status(400).json(error);
@@ -38,12 +43,13 @@ app.use("/callback", login.callback(
 ));
 
 
-/*
-express()
+/*app.get('/', function (req, res) {
+    res.render('index', { title: 'Hey', message: 'Hello there!' })
+})*/
+
+/*app()
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs')
   .get('/', (req, res) => res.render('pages/index'))
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
-*/
-
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`));*/
