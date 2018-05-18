@@ -20,3 +20,12 @@ $ heroku create
 $ git push heroku master
 $ heroku open
 ```
+
+## Change source code
+
+```
+$ heroku git:remote -a {heroku app name}
+$ git add .
+$ git commit -m "First commit"
+$ git push heroku master
+```
