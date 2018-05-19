@@ -37,10 +37,11 @@ app.listen(process.env.PORT || 5000, () => {
 app.use("/login", login.auth());
 app.use("/callback", login.callback(
     (req, res, next, token_response) => {
-        res.render('index', { title: 'Hey', message: 'Hello there!' })
+        //res.render('index', { title: 'Hey', message: 'Hello there!' })
         //res.json(token_response);
-        console.log("token: " + token_response);
-        console.log("test: " + res.json(token_response));
+        console.log(token_response);
+        console.log(res.json(token_response));
+        res.redirect("/");
     },
     (req, res, next, error) => {
         res.status(400).json(error);
