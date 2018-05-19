@@ -1,7 +1,6 @@
 # LINE-LOGIN-BY-GIQUE
 - Run on node.js app using [Express 4](http://expressjs.com/).
-- Using: Node modules: line-login, https, request
-- Using: Node template: ejs
+- Using: modules: line-login, https, request, express, ejs
 - Using: bootstrap, modal, jquery 
 - Deploy: Heroku
 - Connect to: https://developers.line.me
