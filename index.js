@@ -30,8 +30,8 @@ const login = new line_login({
     bot_prompt: "normal"
 });
  
-app.listen(process.env.PORT || 4000, () => {
-    console.log(`server is listening to ${process.env.PORT || 4000}...`);
+app.listen(process.env.PORT || 5000, () => {
+    console.log(`server is listening to ${process.env.PORT || 5000}...`);
 });
  
 app.use("/login", login.auth());
