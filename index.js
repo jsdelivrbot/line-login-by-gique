@@ -39,6 +39,8 @@ app.use("/callback", login.callback(
     (req, res, next, token_response) => {
         res.render('index', { title: 'Hey', message: 'Hello there!' })
         //res.json(token_response);
+        console.log("token: " + token_response);
+        console.log("test: " + res.json(token_response));
     },
     (req, res, next, error) => {
         res.status(400).json(error);
@@ -48,32 +50,19 @@ app.use("/callback", login.callback(
 app.post('/edit', function (req, res) {
     console.log(req.body);
 
-    var options = {
-        hostname: 'https://todo-list-by-gique.herokuapp.com',
-        port: 443,
-        path: '/todolist/v1/edit',
+    var options = { 
         method: 'PUT',
-        rejectUnauthorized: false,
-        headers: {
-            'Content-Type': 'application/json',
-        }
+        url: 'https://todo-list-by-gique.herokuapp.com:443/todolist/v1/edit',
+        headers: { 'cache-control': 'no-cache', 'content-type': 'application/json' }, 
+        body: req.body, json: true 
     };
-    var editRequest = https.request(options, function(resq) {
-        console.log('Status: ' + resq.statusCode);
-        console.log('Headers: ' + JSON.stringify(resq.headers));
-        resq.setEncoding('utf8');
-        resq.on('data', function (body) {
-            console.log('Body: ' + body);
-        });
-        resq.on('end', () => {
-            res.redirect("/");
-        });
+
+    request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+        
+        console.log(response);
+        res.redirect("/");
     });
-    editRequest.on('error', function(e) {
-        console.log('problem with request: ' + e.message);
-    });    
-    editRequest.write(JSON.stringify(req.body));
-    editRequest.end();
 
     req.on('error', function(e) {
         console.log('problem with request: ' + e.message);
