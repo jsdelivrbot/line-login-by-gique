@@ -11,22 +11,60 @@
     <link href="/styles.css" rel="stylesheet">
     <script type="text/javascript">
         $(document).ready(function(){
-            $("#myModal").on('show.bs.modal', function(event){
+            $("#editForm").on('show.bs.modal', function(event){
                 var button = $(event.relatedTarget); 
                 var titleData = button.data('title');
                 $(this).find('.modal-title').text(titleData + ' Form');
 
                 var id = button.data('id');
-                $(this).find('#id').val(id);
                 var status = button.data('status');
-                $(this).find('#status').val(status.trim());
                 var important = button.data('important');
-                $(this).find('#important').val(important);
                 var task = button.data('task');
-                $(this).find('#task').val(task);
                 var duedate = button.data('duedate');
-                $(this).find('#duedate').val(duedate);
                 var lineid = button.data('lineid');
+                
+                $(this).find('#id').val(id);
+                $(this).find('#status').val(status.trim());
+                $(this).find('#important').val(important);
+                $(this).find('#task').val(task);
+                $(this).find('#duedate').val(duedate);
+                $(this).find('#lineid').val(lineid);
+            });
+
+            $("#completedForm").on('show.bs.modal', function(event){
+                var check = $(event.relatedTarget);
+                var titleData = check.data('title');
+                var module = check.data('module');
+                var id = check.data('id');
+                var status = check.data('status');
+                var nextStatus = status;
+                var important = check.data('important');
+                var nextImportant = important;
+                var task = check.data('task');
+                var duedate = check.data('duedate');
+                var lineid = check.data('lineid');
+
+                if(module == 'changeStatus'){
+                    nextStatus = (status.trim() == 'incomplete' ? 'completed' : 'incomplete')
+                    $(this).find('.control-label-multi').text('You want to change status from:');
+                    $(this).find('.current-val').text('"' + status.trim() + '"');
+                    $(this).find('.next-val').text('"' + nextStatus.trim() + '"');
+                } else if(module == 'makeImportant'){
+                    nextImportant = (important == '0' ? '1' : '0')
+                    var currentTextImportant = (important == '0' ? 'normal' : 'important')
+                    var nextTextImportant = (nextImportant == '0' ? 'normal' : 'important')
+
+                    $(this).find('.control-label-multi').text('You want make this task from:');
+                    $(this).find('.current-val').text('"' + currentTextImportant + '"');
+                    $(this).find('.next-val').text('"' + nextTextImportant + '"');
+                }
+                
+                $(this).find('.modal-title').text(titleData);
+                $(this).find('#id').val(id);
+                $(this).find('#status').val(nextStatus.trim());
+                $(this).find('#important').val(nextImportant);
+                $(this).find('#task').val(task);
+                $(this).find('#duedate').val(duedate);
                 $(this).find('#lineid').val(lineid);
             });
         });
@@ -47,22 +85,16 @@
                                                 <tr>
                                                     <td>
                                                         <div class="ckbox">
-                                                            <input type="checkbox" id="<%= todo[i].id %>">
+                                                            <input type="checkbox" id="<%= todo[i].id %>" a href="#completedForm" data-toggle="modal" data-title="Do you want to change status" data-module="changeStatus" data-task="<%= todo[i].task %>" data-duedate="<%= todo[i].dueDate %>" data-id="<%= todo[i].id %>" data-status="<%= todo[i].status.trim() %>" data-important="<%= todo[i].important %>" data-lineid="<%= todo[i].lineId %>" <% if (todo[i].status.trim() == 'completed') { %> checked <% } %>>
                                                             <label for="<%= todo[i].id %>"></label>
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <%if (todo[i].important == 1) { %>
-                                                            <a href="javascript:;" class="star star-checked">
-                                                                <i class="glyphicon glyphicon-star"></i>
-                                                            </a>
-                                                        <% } else{ %>
-                                                            <a href="javascript:;" class="star">
-                                                                <i class="glyphicon glyphicon-star"></i>
-                                                            </a>
-                                                        <% } %>
+                                                        <a href="#completedForm" class="star <% if (todo[i].important == 1) { %> star-checked <% } %>" data-toggle="modal" data-title="Do you want to pin this task?" data-module="makeImportant" data-task="<%= todo[i].task %>" data-duedate="<%= todo[i].dueDate %>" data-id="<%= todo[i].id %>" data-status="<%= todo[i].status.trim() %>" data-important="<%= todo[i].important %>" data-lineid="<%= todo[i].lineId %>">
+                                                            <i class="glyphicon glyphicon-star"></i>
+                                                        </a>
                                                     </td>
-                                                    <td data-status="<%= todo[i].status %>" a href="#myModal" data-title="Edit todo list" data-task="<%= todo[i].task %>" data-duedate="<%= todo[i].dueDate %>" data-id="<%= todo[i].id %>" data-status="<%= todo[i].status.trim() %>" data-important="<%= todo[i].important %>" data-lineid="<%= todo[i].lineId %>" data-toggle="modal">
+                                                    <td data-status="<%= todo[i].status %>" a href="#editForm" data-title="Edit todo list" data-task="<%= todo[i].task %>" data-duedate="<%= todo[i].dueDate %>" data-id="<%= todo[i].id %>" data-status="<%= todo[i].status.trim() %>" data-important="<%= todo[i].important %>" data-lineid="<%= todo[i].lineId %>" data-toggle="modal">
                                                         <div class="media">
                                                             <a href="#" class="pull-left">
                                                                 <img src="<%= profile_pic %>" class="media-photo">
@@ -96,48 +128,83 @@
             </div>
         </div>
   
-
-
-
         <div class="bs-example">
-                <!-- Modal HTML -->
-                <div id="myModal" class="modal fade">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title">Modal Window</h4>
-                            </div>
-                            <form action ="/edit" method="POST">
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <input type="hidden" class="form-control" id="id" name="id" />
-                                        <input type="hidden" class="form-control" id="lineid" name="lineId" />
-                                        <input type="hidden" class="form-control" id="important" name="important" />
-                                        <label for="duedate" class="control-label">Due Date:</label>
-                                        <input type="text" class="form-control" id="duedate" name="dueDate" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="status" class="control-label">Status:</label>
-                                        <select class="form-control" id="status" name="status">
-                                            <option value="incomplete">incomplete</option>
-                                            <option value="completed">completed</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="task" class="control-label">Task:</label>
-                                        <textarea class="form-control" id="task" name="task"></textarea>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button class="btn btn-primary">Confirm</button>
-                                </div>
-                            </form>
+            <!-- Modal HTML Form-->
+            <div id="editForm" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Modal Window</h4>
                         </div>
+                        <form action ="/edit" method="POST">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="hidden" class="form-control" id="id" name="id" />
+                                    <input type="hidden" class="form-control" id="lineid" name="lineId" />
+                                    <input type="hidden" class="form-control" id="important" name="important" />
+                                    <label for="duedate" class="control-label">Due Date:</label>
+                                    <input type="text" class="form-control" id="duedate" name="dueDate" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="status" class="control-label">Status:</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="incomplete">incomplete</option>
+                                        <option value="completed">completed</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="task" class="control-label">Task:</label>
+                                    <textarea class="form-control" id="task" name="task"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary">Confirm</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>     
+            </div>
+        </div>
+        
+
+        <div class="bs-example">
+            <!-- Modal HTML Form-->
+            <div id="completedForm" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Modal Window</h4>
+                        </div>
+                        <form action ="/edit" method="POST">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="hidden" class="form-control" id="id" name="id" />
+                                    <input type="hidden" class="form-control" id="lineid" name="lineId" />
+                                    <input type="hidden" class="form-control" id="important" name="important" />
+                                    <input type="hidden" class="form-control" id="duedate" name="dueDate" />
+                                    <input type="hidden" class="form-control" id="status" name="status" />
+                                    <textarea class="form-control" id="task" name="task" style="display:none;"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label-multi">Wating...</label>
+                                    <label class="current-val">current</label>
+                                    <label class="control-label"> to </label>
+                                    <label class="next-val">next</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary">Confirm</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
  
         
 </body>

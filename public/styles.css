@@ -160,3 +160,11 @@ body {
 .table-filter .media .summary {
     font-size: 14px;
 }
+
+.current-val {
+    color: #d9534f;
+}
+
+.next-val {
+    color: #5cb85c;
+}
