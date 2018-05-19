@@ -82,23 +82,5 @@ app.post('/edit', function (req, res) {
 });
 
 app.get("/", function(req, res) {
-    //res.render("error", {});
-
-    https.get('https://todo-list-by-gique.herokuapp.com/todolist/v1/list?line_id=U67376bab83a6083a5924463cf55a1d4f', (resp) => {
-        let todo = '';
-        resp.on('data', (chunk) => {
-            todo = JSON.parse(chunk);
-            //user_name = token_response.id_token.name;
-            //profile_pic = token_response.id_token.picture;
-
-            console.log("Status code: " +todo.status.code);
-            console.log("Status message: " + todo.status.message);
-        });
-        resp.on('end', () => {
-            res.render("index", { todo: todo.data, user_name: "เสือ บันเทิง", profile_pic: "https://profile.line-scdn.net/0hTxk-m2LHC1dWVCfHXI10AGoRBToheg0fLjtHZXoBBmZ7N08JPjBDZnZVXTJ7Y0QBOTFFZCNVAWVz" });
-        });
-    }).on("error", (err) => {
-        console.log("Error: " + err.message);
-    });
-
+    res.render("error", {});
 });
