@@ -41,7 +41,23 @@ app.use("/callback", login.callback(
         //res.json(token_response);
         console.log(token_response);
         console.log(res.json(token_response));
-        res.redirect("/");
+        
+        https.get('https://todo-list-by-gique.herokuapp.com/todolist/v1/list?line_id=U67376bab83a6083a5924463cf55a1d4f', (resp) => {
+            //http.get('http://localhost:5000/todolist/v1/list?line_id=id_1_test', (resp) => {
+            let todo = '';
+            resp.on('data', (chunk) => {
+                todo = JSON.parse(chunk);
+                console.log("Status code: " +todo.status.code);
+                console.log("Status message: " + todo.status.message);
+            });
+            resp.on('end', () => {
+                res.render("index", { todo: todo.data});
+            });
+        }).on("error", (err) => {
+            console.log("Error: " + err.message);
+        });
+
+        //res.render('index', { title: 'Hey', message: 'Hello there!' })
     },
     (req, res, next, error) => {
         res.status(400).json(error);
