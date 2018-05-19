@@ -70,8 +70,7 @@ app.post('/edit', function (req, res) {
         if (error) throw new Error(error);
         
         console.log(response);
-        //res.redirect("/callback");
-        res.render("index", { todo: "", user_name: "", profile_pic: ""});
+        res.render("index", { todo: body.data, user_name: "", profile_pic: ""});
     });
 
     req.on('error', function(e) {
