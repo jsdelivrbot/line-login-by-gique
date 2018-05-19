@@ -37,7 +37,6 @@ app.listen(process.env.PORT || 5000, () => {
 app.use("/login", login.auth());
 app.use("/callback", login.callback(
     (req, res, next, token_response) => {
-        //console.log(token_response.access_token);
         https.get('https://todo-list-by-gique.herokuapp.com/todolist/v1/list?line_id='+ token_response.id_token.sub, (resp) => {
             let todo = '';
             resp.on('data', (chunk) => {
@@ -71,7 +70,8 @@ app.post('/edit', function (req, res) {
         if (error) throw new Error(error);
         
         console.log(response);
-        res.redirect("/callback");
+        //res.redirect("/callback");
+        res.render("index", { todo: "", user_name: "", profile_pic: ""});
     });
 
     req.on('error', function(e) {
