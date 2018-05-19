@@ -15,12 +15,6 @@ const session_options = {
     resave: false,
     saveUninitialized: false
 }
-
-app.use(express.static('public'));
-app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use(session(session_options));
 const login = new line_login({
     channel_id: process.env.LINE_LOGIN_CHANNEL_ID,
     channel_secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
@@ -29,6 +23,14 @@ const login = new line_login({
     prompt: "consent",
     bot_prompt: "normal"
 });
+
+let user_name = '';
+let profile_pic = '';
+
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session(session_options));
  
 app.listen(process.env.PORT || 5000, () => {
     console.log(`server is listening to ${process.env.PORT || 5000}...`);
@@ -41,6 +43,9 @@ app.use("/callback", login.callback(
             let todo = '';
             resp.on('data', (chunk) => {
                 todo = JSON.parse(chunk);
+                user_name = token_response.id_token.name;
+                profile_pic = token_response.id_token.picture;
+
                 console.log("Status code: " +todo.status.code);
                 console.log("Status message: " + todo.status.message);
             });
@@ -70,7 +75,7 @@ app.post('/edit', function (req, res) {
         if (error) throw new Error(error);
         
         console.log(body.data);
-        res.render("index", { todo: body.data, user_name: "", profile_pic: ""});
+        res.render("index", { todo: body.data, user_name: user_name, profile_pic: profile_pic});
     });
 
     req.on('error', function(e) {
@@ -79,17 +84,5 @@ app.post('/edit', function (req, res) {
 });
 
 app.get("/", function(req, res) {
-    https.get('https://todo-list-by-gique.herokuapp.com/todolist/v1/list?line_id=xxx', (resp) => {
-        let todo = '';
-        resp.on('data', (chunk) => {
-            todo = JSON.parse(chunk);
-            console.log("Status code: " +todo.status.code);
-            console.log("Status message: " + todo.status.message);
-        });
-        resp.on('end', () => {
-            res.render("index", { todo: todo.data});
-        });
-    }).on("error", (err) => {
-        console.log("Error: " + err.message);
-    });
+    res.render("error", {});
 });
