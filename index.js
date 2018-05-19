@@ -37,17 +37,8 @@ app.listen(process.env.PORT || 5000, () => {
 app.use("/login", login.auth());
 app.use("/callback", login.callback(
     (req, res, next, token_response) => {
-        //res.render('index', { title: 'Hey', message: 'Hello there!' })
-        //res.json(token_response);
-        //console.log(token_response);
-        //console.log(res.json(token_response));
-        console.log(token_response.access_token);
-        console.log(token_response.id_token.sub);
-        console.log(token_response.id_token.name);
-        console.log(token_response.id_token.picture);
-
-        https.get('https://todo-list-by-gique.herokuapp.com/todolist/v1/list?line_id=U67376bab83a6083a5924463cf55a1d4f', (resp) => {
-            //http.get('http://localhost:5000/todolist/v1/list?line_id=id_1_test', (resp) => {
+        //console.log(token_response.access_token);
+        https.get('https://todo-list-by-gique.herokuapp.com/todolist/v1/list?line_id='+ token_response.id_token.sub, (resp) => {
             let todo = '';
             resp.on('data', (chunk) => {
                 todo = JSON.parse(chunk);
@@ -55,13 +46,11 @@ app.use("/callback", login.callback(
                 console.log("Status message: " + todo.status.message);
             });
             resp.on('end', () => {
-                res.render("index", { todo: todo.data});
+                res.render("index", { todo: todo.data, user_name: token_response.id_token.name, profile_pic: token_response.id_token.picture});
             });
         }).on("error", (err) => {
             console.log("Error: " + err.message);
         });
-
-        //res.render('index', { title: 'Hey', message: 'Hello there!' })
     },
     (req, res, next, error) => {
         res.status(400).json(error);
@@ -91,8 +80,7 @@ app.post('/edit', function (req, res) {
 });
 
 app.get("/", function(req, res) {
-    https.get('https://todo-list-by-gique.herokuapp.com/todolist/v1/list?line_id=U67376bab83a6083a5924463cf55a1d4f', (resp) => {
-        //http.get('http://localhost:5000/todolist/v1/list?line_id=id_1_test', (resp) => {
+    https.get('https://todo-list-by-gique.herokuapp.com/todolist/v1/list?line_id=xxx', (resp) => {
         let todo = '';
         resp.on('data', (chunk) => {
             todo = JSON.parse(chunk);

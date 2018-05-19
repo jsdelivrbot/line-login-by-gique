@@ -34,7 +34,7 @@
     <div class="container">
             <div class="row">
                 <section class="content">
-                    <h1>Edit todo list</h1>
+                    <h1>Edit todo list of <%= user_name %></h1>
                     <div class="col-md-8 col-md-offset-2">
                         <div class="panel panel-default">
                             <div class="panel-body">
@@ -63,7 +63,7 @@
                                                     <td data-status="<%= todo[i].status %>" a href="#myModal" data-title="Edit todo list" data-task="<%= todo[i].task %>" data-duedate="<%= todo[i].dueDate %>" data-id="<%= todo[i].id %>" data-status="<%= todo[i].status.trim() %>" data-important="<%= todo[i].important %>" data-toggle="modal">
                                                         <div class="media">
                                                             <a href="#" class="pull-left">
-                                                                <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
+                                                                <img src="<%= profile_pic %>" class="media-photo">
                                                             </a>
                                                             <div class="media-body">
                                                                 <span class="media-meta pull-right">Created: <%= todo[i].createdAt %> </span>
