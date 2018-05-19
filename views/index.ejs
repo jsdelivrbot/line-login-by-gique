@@ -1,0 +1,140 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> Todo List by GIQUE </title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="/styles.css" rel="stylesheet">
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#myModal").on('show.bs.modal', function(event){
+                var button = $(event.relatedTarget); 
+                var titleData = button.data('title');
+                $(this).find('.modal-title').text(titleData + ' Form');
+
+                var id = button.data('id');
+                $(this).find('#id').val(id);
+                var status = button.data('status');
+                $(this).find('#status').val(status.trim());
+                var important = button.data('important');
+                $(this).find('#important').val(important);
+                var task = button.data('task');
+                $(this).find('#task').val(task);
+                var duedate = button.data('duedate');
+                $(this).find('#duedate').val(duedate);
+            });
+        });
+    </script>
+  </head>
+<body>
+    <div class="container">
+            <div class="row">
+                <section class="content">
+                    <h1>Edit todo list</h1>
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="table-container">
+                                    <table class="table table-filter">
+                                        <tbody>
+                                            <% for( var i = 0; i < todo.length; i++){ %>
+                                                <tr>
+                                                    <td>
+                                                        <div class="ckbox">
+                                                            <input type="checkbox" id="<%= todo[i].id %>">
+                                                            <label for="<%= todo[i].id %>"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <%if (todo[i].important == 1) { %>
+                                                            <a href="javascript:;" class="star star-checked">
+                                                                <i class="glyphicon glyphicon-star"></i>
+                                                            </a>
+                                                        <% } else{ %>
+                                                            <a href="javascript:;" class="star">
+                                                                <i class="glyphicon glyphicon-star"></i>
+                                                            </a>
+                                                        <% } %>
+                                                    </td>
+                                                    <td data-status="<%= todo[i].status %>" a href="#myModal" data-title="Edit todo list" data-task="<%= todo[i].task %>" data-duedate="<%= todo[i].dueDate %>" data-id="<%= todo[i].id %>" data-status="<%= todo[i].status.trim() %>" data-important="<%= todo[i].important %>" data-toggle="modal">
+                                                        <div class="media">
+                                                            <a href="#" class="pull-left">
+                                                                <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
+                                                            </a>
+                                                            <div class="media-body">
+                                                                <span class="media-meta pull-right">Created: <%= todo[i].createdAt %> </span>
+                                                                <h4 class="title">
+                                                                    <%= todo[i].dueDate %>
+                                                                    <span class="pull-right <%= todo[i].status %>">(<%= todo[i].status.trim() %>)</span>
+                                                                </h4>
+                                                                <p class="summary"><%= todo[i].task %></p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-footer">
+                            <p>
+                                Todo list © - 2018 <br>
+                                Powered By <a href="https://www.medium.com/@iamgique" target="_blank">iamGique</a>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+        </div>
+  
+
+
+
+        <div class="bs-example">
+                <!-- Modal HTML -->
+                <div id="myModal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Modal Window</h4>
+                            </div>
+                            <form action ="/edit" method="POST">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input type="hidden" class="form-control" id="id" name="id" />
+                                        <label for="duedate" class="control-label">Due Date:</label>
+                                        <input type="text" class="form-control" id="duedate" name="dueDate" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="status" class="control-label">Status:</label>
+                                        <select class="form-control" id="status" name="status">
+                                            <option value="incomplete">incomplete</option>
+                                            <option value="complete">complete</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="task" class="control-label">Task:</label>
+                                        <textarea class="form-control" id="task" name="task"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button class="btn btn-primary">Confirm</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>     
+ 
+        
+</body>
+</html>

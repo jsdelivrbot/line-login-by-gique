@@ -1,8 +1,13 @@
 "use strict";
 
 const path = require('path');
+const bodyParser = require("body-parser");
 const dotenv = require('dotenv').config();
-const app = require('express')();
+const express = require("express");
+const app = express();
+const request = require('request');
+const https = require('https');
+const http = require('http');
 const line_login = require("line-login");
 const session = require("express-session");
 const session_options = {
@@ -10,9 +15,12 @@ const session_options = {
     resave: false,
     saveUninitialized: false
 }
-app.set('view engine', 'pug')
-app.use(session(session_options));
 
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(session(session_options));
 const login = new line_login({
     channel_id: process.env.LINE_LOGIN_CHANNEL_ID,
     channel_secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
@@ -22,34 +30,69 @@ const login = new line_login({
     bot_prompt: "normal"
 });
  
-app.listen(process.env.PORT || 5000, () => {
-    console.log(`server is listening to ${process.env.PORT || 5000}...`);
+app.listen(process.env.PORT || 4000, () => {
+    console.log(`server is listening to ${process.env.PORT || 4000}...`);
 });
  
 app.use("/login", login.auth());
- 
-// Specify the path you want to wait for the callback from LINE authorization endpoint.
 app.use("/callback", login.callback(
     (req, res, next, token_response) => {
-
-        //res.json(token_response.access_token);
         res.render('index', { title: 'Hey', message: 'Hello there!' })
         //res.json(token_response);
-        //res.render('pages/index');
     },
     (req, res, next, error) => {
         res.status(400).json(error);
     }
 ));
 
+app.post('/edit', function (req, res) {
+    console.log(req.body);
 
-/*app.get('/', function (req, res) {
-    res.render('index', { title: 'Hey', message: 'Hello there!' })
-})*/
+    var options = {
+        hostname: 'https://todo-list-by-gique.herokuapp.com',
+        port: 443,
+        path: '/todolist/v1/edit',
+        method: 'PUT',
+        rejectUnauthorized: false,
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    };
+    var editRequest = https.request(options, function(resq) {
+        console.log('Status: ' + resq.statusCode);
+        console.log('Headers: ' + JSON.stringify(resq.headers));
+        resq.setEncoding('utf8');
+        resq.on('data', function (body) {
+            console.log('Body: ' + body);
+        });
+        resq.on('end', () => {
+            res.redirect("/");
+        });
+    });
+    editRequest.on('error', function(e) {
+        console.log('problem with request: ' + e.message);
+    });    
+    editRequest.write(JSON.stringify(req.body));
+    editRequest.end();
 
-/*app()
-  .use(express.static(path.join(__dirname, 'public')))
-  .set('views', path.join(__dirname, 'views'))
-  .set('view engine', 'ejs')
-  .get('/', (req, res) => res.render('pages/index'))
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`));*/
+    req.on('error', function(e) {
+        console.log('problem with request: ' + e.message);
+    })
+});
+
+app.get("/", function(req, res) {
+    https.get('https://todo-list-by-gique.herokuapp.com/todolist/v1/list?line_id=U67376bab83a6083a5924463cf55a1d4f', (resp) => {
+        //http.get('http://localhost:5000/todolist/v1/list?line_id=id_1_test', (resp) => {
+        let todo = '';
+        resp.on('data', (chunk) => {
+            todo = JSON.parse(chunk);
+            console.log("Status code: " +todo.status.code);
+            console.log("Status message: " + todo.status.message);
+        });
+        resp.on('end', () => {
+            res.render("index", { todo: todo.data});
+        });
+    }).on("error", (err) => {
+        console.log("Error: " + err.message);
+    });
+});
