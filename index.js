@@ -71,7 +71,7 @@ app.post('/edit', function (req, res) {
         if (error) throw new Error(error);
         
         console.log(response);
-        res.redirect("/");
+        res.redirect("/callback");
     });
 
     req.on('error', function(e) {
