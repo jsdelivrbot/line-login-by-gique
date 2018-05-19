@@ -26,6 +26,8 @@
                 $(this).find('#task').val(task);
                 var duedate = button.data('duedate');
                 $(this).find('#duedate').val(duedate);
+                var lineid = button.data('lineid');
+                $(this).find('#lineid').val(lineid);
             });
         });
     </script>
@@ -60,7 +62,7 @@
                                                             </a>
                                                         <% } %>
                                                     </td>
-                                                    <td data-status="<%= todo[i].status %>" a href="#myModal" data-title="Edit todo list" data-task="<%= todo[i].task %>" data-duedate="<%= todo[i].dueDate %>" data-id="<%= todo[i].id %>" data-status="<%= todo[i].status.trim() %>" data-important="<%= todo[i].important %>" data-toggle="modal">
+                                                    <td data-status="<%= todo[i].status %>" a href="#myModal" data-title="Edit todo list" data-task="<%= todo[i].task %>" data-duedate="<%= todo[i].dueDate %>" data-id="<%= todo[i].id %>" data-status="<%= todo[i].status.trim() %>" data-important="<%= todo[i].important %>" data-lineid="<%= todo[i].lineId %>" data-toggle="modal">
                                                         <div class="media">
                                                             <a href="#" class="pull-left">
                                                                 <img src="<%= profile_pic %>" class="media-photo">
@@ -110,6 +112,7 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <input type="hidden" class="form-control" id="id" name="id" />
+                                        <input type="hidden" class="form-control" id="lineid" name="lineId" />
                                         <label for="duedate" class="control-label">Due Date:</label>
                                         <input type="text" class="form-control" id="duedate" name="dueDate" />
                                     </div>

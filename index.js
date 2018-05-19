@@ -69,7 +69,7 @@ app.post('/edit', function (req, res) {
     request(options, function (error, response, body) {
         if (error) throw new Error(error);
         
-        console.log(response);
+        console.log(body.data);
         res.render("index", { todo: body.data, user_name: "", profile_pic: ""});
     });
 
